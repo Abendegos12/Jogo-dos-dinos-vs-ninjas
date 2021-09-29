@@ -8,10 +8,14 @@ public class Ninja : MonoBehaviour
     public float tempoPulo;
     private float tempoPulado;
     private Vector3 posicaoInicial;
+    private Animator anim;
+    private SpriteRenderer sprite;
     // Start is called before the first frame update
     void Start()
     {
         posicaoInicial = this.transform.position;
+        anim = this.GetComponent<Animator>();
+        sprite = this.GetComponent<SpriteRenderer>();
     }
 
     // Update is called once per frame
@@ -19,6 +23,7 @@ public class Ninja : MonoBehaviour
     {
         if(Input.GetKey(KeyCode.D))
         {
+            sprite.flipX = false;
             Vector3 pos = this.transform.position;
             //pos.x = pos.x + velocidade;
             pos.x += velocidade;
@@ -26,6 +31,7 @@ public class Ninja : MonoBehaviour
         }
         if(Input.GetKey(KeyCode.A))
         {
+            sprite.flipX = true;
             Vector3 pos = this.transform.position;
             //pos.x = pos.x - velocidade;
             pos.x -= velocidade;
@@ -36,7 +42,8 @@ public class Ninja : MonoBehaviour
             Rigidbody2D rb = GetComponent<Rigidbody2D>();
             Vector2 forca = new Vector2(0f, 10f);
             rb.AddForce(forca, ForceMode2D.Impulse);
-            tempoPulado = tempoPulo;       
+            tempoPulado = tempoPulo;
+            anim.SetBool("estaPulando", true)       
         }
         //Debug.Log(Time.deltaTime);
         tempoPulado -= Time.deltaTime;
@@ -45,12 +52,24 @@ public class Ninja : MonoBehaviour
         {
             this.transform.position = posicaoInicial;
         }
+        if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.A))
+        {
+            anim.SetBool("estaAndando", true);
+        }
+        else
+        {
+            anim.SetBool("estaAndando", false);
+        }
     }
     void OnCollisionEnter2D(Collision2D col)
     {
         if(col.gameObject.tag == "cacto")
         {
             this.transform.position = posicaoInicial;
+        }
+        if(col.gameObject.tag == "chao")
+        {
+            anim.SetBool("estaPulando", false);
         }
     }
 }

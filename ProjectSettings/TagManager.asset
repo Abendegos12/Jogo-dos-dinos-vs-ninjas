@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - cacto
+  - chao
   layers:
   - Default
   - TransparentFX
